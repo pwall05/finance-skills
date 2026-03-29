@@ -1,104 +1,111 @@
----
-name: valuation-ma-modeling
-description: Build and review valuation models (DCF, comps, precedent transactions) and M&A deal structures for Canadian SMB acquisitions. Use this skill whenever the user asks about valuing a business, building a DCF, running comparable company analysis, structuring an acquisition, analyzing an LOI, or working within the Diligence OS platform. Also trigger for purchase price discussions, EBITDA multiple benchmarking, returns modeling (IRR, MOIC), synergy analysis, or any "what would we pay for X" conversation. Trigger on phrases like "what's it worth", "build a model", "run the DCF", "what multiple", "diligence on X", or "acquisition model".
----
+# Valuation & M&A Modeling Skill
 
-# Valuation & M&A Modeling
+## Purpose
+Build acquisition models for Canadian SMB targets. EV/EBITDA comps, DCF, acquisition model, returns, LOI price guidance.
 
-Paul focuses on Canadian SMB acquisitions — typically private companies in industrial/recycling sectors in Saskatchewan and Alberta. The primary platform is **Diligence OS** (a purpose-built deal diligence tool Paul is building). Models are typically built in Excel; memos in Word.
+## Trigger
+Valuation, DCF, comps, acquisition model, returns, IRR, MOIC, LOI pricing, "what would we pay."
 
----
-
-## Context: Canadian SMB M&A
-
-- Typical targets: $1M–$20M EBITDA, private, owner-operated
-- Common structures: asset purchase (preferred for tax), share purchase
-- Valuation range: 3–7x EBITDA for industrial SMBs (adjust for growth, quality, customer concentration)
-- Tax considerations: Canadian QSBC, capital gains exemption, earnouts, vendor take-backs (VTBs)
-- Financing: senior debt (chartered banks), BDC, seller financing / VTB, equity
+## References
+- `valuation-ma-modeling/references/canadian-sme-benchmarks.md`
+- `valuation-ma-modeling/references/diligence-os-structure.md`
 
 ---
 
-## Step 1 — Establish the Modeling Purpose
+## Step 1 — Establish Adjusted EBITDA
+Confirm before valuing:
+- LTM Adjusted EBITDA (most recent 12 months)
+- FY Adjusted EBITDA (last 3 fiscal years)
+- Forward EBITDA estimate if available
 
-| Mode | What to build |
+If normalization not done — fetch `deal-pipeline/SKILL.md` first.
+
+## Step 2 — EV/EBITDA Comps
+
+Reference ranges (fetch full benchmarks from canadian-sme-benchmarks.md):
+- EBITDA $1M-$3M: 3.0-4.5x
+- EBITDA $3M-$7M: 4.0-5.5x
+- EBITDA $7M-$15M: 5.0-7.0x
+
+Multiple adjustments:
+| Factor | Direction |
 |---|---|
-| Quick sizing | EBITDA multiple range + simple IRR at 3 entry prices |
-| Full buy-side model | DCF + comps + returns model in Excel |
-| Diligence OS module | Structured financial analytics per Diligence OS schema |
-| LOI / term sheet review | Implied multiple, structure analysis, risk flags |
-| Synergy model | Standalone + synergy case, value attribution |
+| Recurring / contracted revenue | + |
+| Customer concentration >30% single customer | - |
+| Owner-dependent operations | - |
+| Strong management team in place | + |
+| Asset-heavy (trucks, equipment) | - |
+| Growing market (SK/AB energy recovery) | + |
+| Cyclical or declining revenue | - |
+| Reviewed/audited financials | + |
+| Internal/unreviewed books | - |
 
----
+## Step 3 — Acquisition Model
 
-## Step 2 — Valuation Methodologies
+### Sources & Uses
+```
+USES                              SOURCES
+Purchase Price (EV)               Senior Debt (chartered bank)
++ Transaction Costs (2-3%)        Vendor Take-Back (VTB)
++ Working Capital Peg             Equity (Paul / co-investors)
+= Total Uses                      = Total Sources
+```
 
-### DCF
-- Projection period: 5 years standard (extend to 10 if business has long-cycle capex)
-- WACC: For private Canadian SMBs, use 12–18% (higher for smaller/riskier; use CAPM + size premium + company-specific risk)
-- Terminal value: Gordon Growth (2–3% terminal growth) or exit multiple method — show both
-- Normalize FCF: start from EBITDA, deduct taxes (27% combined federal+provincial SK/AB), D&A, Δ WC, capex
-- Sensitivity: always show 2×2 table — WACC vs. terminal growth rate
+### Financing Assumptions (Canadian, SK/AB)
+- Senior debt: 2.5-3.5x Adj. EBITDA (BDC, TD, RBC, ATB)
+- Interest rate: Prime + 1.5-2.5% variable or 6-8% fixed
+- Amortization: 5-7 years
+- VTB: 10-20% of purchase price, 5-7% interest, subordinated
+- Equity: balance of sources
 
-### Comparable Company Analysis
-- Public comps: look for Canadian or US industrial/recycling/distribution comparables
-- Key multiples: EV/EBITDA, EV/Revenue, P/E (use EV/EBITDA as primary for private SMBs)
-- Apply private company discount: 15–25% for illiquidity/size
-- Source benchmarks from: Capital IQ (if available), public filings, industry reports
+### Returns Model
+| Metric | Formula |
+|---|---|
+| Entry EV | Adj. EBITDA x Entry Multiple |
+| Exit EV | Forward EBITDA x Exit Multiple |
+| Equity Proceeds | Exit EV - Remaining Debt |
+| MOIC | Equity Proceeds / Equity Invested |
+| IRR | Solve for r in NPV = 0 |
 
-### Precedent Transactions
-- Search Canadian industrial sector M&A, past 5 years
-- Key metrics: EV/EBITDA paid, deal structure (asset vs. share), earnout prevalence
-- Note: Canadian private deal data is thin — supplement with US comparable sector transactions
+Sensitivity table: Entry multiple (3.0x-6.0x) x Exit multiple (3.5x-7.0x).
 
-### Returns Model (for acquisition)
-- Entry: purchase price + transaction costs (1.5–2% of deal value)
-- Financing: model debt schedule with amortization
-- Exit: 5-year hold, exit at entry multiple (base), ±1x (bull/bear)
-- Returns: IRR and MOIC at each scenario
-- Minimum return threshold: 20%+ IRR for SMB buyout
+### Paul's Return Thresholds
+- IRR: >25% base case
+- MOIC: >2.5x at 5 years
+- Payback: <4 years on equity
 
----
+## Step 4 — DCF (if forward model available)
+- Forecast: 5 years
+- Terminal growth: 2.0-3.0%
+- WACC: 12-16% (private company, SK/AB, size-adjusted)
+- Terminal value: Gordon Growth Model
+- Mid-year discounting
 
-## Step 3 — Diligence OS Integration
+Sanity check: if DCF diverges >20% from comps — explain the driver, do not average blindly.
 
-When working within Diligence OS context, structure outputs to match the platform's modules:
+## Step 5 — LOI Price Guidance
 
-1. **Document Ingestion** — flag what financial documents are available and what's missing
-2. **Financial Analytics** — normalized EBITDA build, historical trends, QoE flags
-3. **Forward-Looking Model** — projection assumptions, scenario cases
-4. **Acquisition Model** — entry price, structure, returns
-5. **Risk Register** — key risks, mitigants, deal-breakers
+| Scenario | Adj. EBITDA | Multiple | EV | Equity Required | IRR (5yr) |
+|---|---|---|---|---|---|
+| Bear | $X | 3.5x | $X | $X | X% |
+| Base | $X | 4.5x | $X | $X | X% |
+| Bull | $X | 5.5x | $X | $X | X% |
 
-See `references/diligence-os-structure.md` for full module schema.
+If walk price > target price at base EBITDA — deal doesn't work, explain clearly.
 
----
+## Step 6 — Canadian Tax Considerations
 
-## Step 4 — Output Standards
+### Asset vs. Share Purchase
+| Factor | Asset Purchase | Share Purchase |
+|---|---|---|
+| Buyer preference | Generally preferred — step-up in ACB | Avoids assumed liabilities |
+| Seller preference | Less preferred (recapture, no LCGE) | Preferred (LCGE eligibility) |
+| QSBC / LCGE | N/A | Seller may qualify — $1.016M LCGE (2024 limit) |
+| Purchase price allocation | Required (Class 8, 10, 14.1, etc.) | Not required |
+| GST/HST | May apply — check ETA s.167 election | No GST on share transfer |
 
-### Excel Model
-Structure tabs in this order:
-1. **Cover** — deal name, date, model version, key assumptions summary
-2. **Inputs** — all assumptions centralized (yellow cells = inputs)
-3. **Historical** — 3–5 years normalized financials
-4. **Projections** — 5-year P&L, BS, CF
-5. **DCF** — WACC build, FCF, terminal value, sensitivity
-6. **Comps** — comparable company table with multiples
-7. **Returns** — acquisition structure, debt schedule, IRR/MOIC
-8. **Summary** — 1-page dashboard: valuation range, football field, key assumptions
+Key items: CCPC small business rate (Fed 9% + SK 1% or AB 2% on first $500K), shareholder loan must be resolved pre-close, Due from shareholder = non-operating asset adjust purchase price.
 
-### Word Memo
-- 1-page executive summary: recommendation, price range, key risks
-- Section 2: Business overview (1–2 pages)
-- Section 3: Financial analysis (reference Excel; don't re-table everything)
-- Section 4: Valuation (methodology, outputs, football field)
-- Section 5: Deal structure considerations
-- Section 6: Key risks and open items
-
----
-
-## Reference Files
-
-- `references/diligence-os-structure.md` — Full Diligence OS module schema
-- `references/canadian-sme-benchmarks.md` — Valuation multiples and deal structure norms for Canadian SMBs
-- `references/wacc-build.md` — Step-by-step WACC calculation for private Canadian companies
+## Output
+Acquisition model: Excel (.xlsx) → `deals/[DealCode]/03_valuation/[DealCode]_AcqModel_[Date].xlsx`
+Deal memo: Word (.docx) → `deals/[DealCode]/04_outputs/Deal_Memo_[Date].docx`
