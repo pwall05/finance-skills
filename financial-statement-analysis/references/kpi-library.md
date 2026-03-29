@@ -1,46 +1,71 @@
-# KPI Library — Scrap Metal & Recycling
+# KPI Library — Canadian SMB Acquisitions
 
-Reference KPIs for financial analysis of scrap metal recycling businesses (Saskatchewan/Alberta context).
+## Universal KPIs
 
-## Volume & Throughput
-- Tonnes purchased (ferrous / non-ferrous split)
-- Tonnes processed / shipped
-- Utilization rate (tonnes processed / capacity)
-- Average buy price per tonne (by commodity: HMS, shred, copper, aluminum, etc.)
-- Average sell price per tonne
+| KPI | Formula | Notes |
+|---|---|---|
+| Revenue CAGR | (Rev_n / Rev_0)^(1/n) - 1 | Use 2yr and 3yr |
+| Gross Margin % | Gross Profit / Net Revenue | |
+| EBITDA Margin % | Adjusted EBITDA / Net Revenue | Use adjusted |
+| Net Margin % | Net Income / Net Revenue | Pre-normalization reference only |
+| Revenue per FTE | Revenue / Headcount | Request FTE count |
+| Owner Comp % Revenue | Owner total comp / Revenue | Flag if >10% |
+| DSO | AR / (Revenue / 365) | |
+| DPO | AP / (COGS / 365) | |
+| Debt / EBITDA | Net Debt / Adj. EBITDA | |
+| Interest Coverage | Adj. EBITDA / Interest | |
+| Fixed Charge Coverage | (EBITDA - Capex) / (Interest + Principal) | |
+| Capex / Revenue | Total Capex / Revenue | |
+| Capex / D&A | Total Capex / D&A | <1x = under-investing |
 
-## Revenue
-- Revenue per tonne
-- Revenue mix: ferrous % / non-ferrous % / other (e-waste, catalytic, etc.)
-- Spot vs. contract revenue split
-- Geographic split: SK vs. AB
+## Sector Benchmarks (SK/AB Private)
 
-## Margins
-- Gross margin % (and $/tonne)
-- Processing spread: sell price – buy price – processing cost (the core operational metric)
-- EBITDA margin %
-- EBITDA per tonne
+### Oilfield Services / Fluid Hauling
+| KPI | Range | Notes |
+|---|---|---|
+| Gross Margin | 28-42% | Higher = more equipment-light |
+| EBITDA Margin | 14-22% | Cyclical — verify vs. commodity cycle |
+| Revenue / Truck | $400K-$900K | Fleet-based |
+| Customer concentration | Top 3 < 60% | Often concentrated in oilfield |
 
-## Working Capital
-- Inventory days (scrap on hand / COGS × days)
-- AR days
-- AP days
-- Cash conversion cycle
+### Industrial Services / Maintenance
+| KPI | Range |
+|---|---|
+| Gross Margin | 32-48% |
+| EBITDA Margin | 15-25% |
+| Labour as % COGS | 50-70% |
+| Recurring revenue | >50% preferred |
 
-## Operational
-- Truck utilization (if collection fleet tracked)
-- Labour cost per tonne
-- Energy cost per tonne
-- Shrinkage / yield loss %
+### Transportation / Trucking
+| KPI | Range |
+|---|---|
+| Gross Margin | 20-32% |
+| EBITDA Margin | 8-16% |
+| Revenue / Truck | $350K-$750K |
+| Fuel as % Revenue | 18-28% |
 
-## Capital & Returns
-- Capex / revenue %
-- Return on assets
-- Net debt / EBITDA
-- FCF conversion (FCF / EBITDA)
+### Equipment Rental
+| KPI | Range |
+|---|---|
+| Gross Margin | 45-65% |
+| EBITDA Margin | 30-48% |
+| Fleet utilization | >65% healthy |
+| Capex / Revenue | 15-30% |
 
-## Commodity Benchmarks (for context)
-- LME copper price (USD/lb)
-- LME aluminum price (USD/lb)
-- US Midwest HMS #1 (USD/GT) — proxy for ferrous
-- CAD/USD exchange rate (significant for cross-border pricing)
+### General Contracting
+| KPI | Range |
+|---|---|
+| Gross Margin | 12-22% |
+| EBITDA Margin | 5-12% |
+| Backlog / Revenue | >0.5x preferred |
+
+## Owner Comp Normalization Benchmarks (SK/AB, CAD)
+| Role | Market Rate Total Comp |
+|---|---|
+| GM / CEO (revenue <$5M) | $130,000-$165,000 |
+| GM / COO ($5M-$20M revenue) | $160,000-$210,000 |
+| Operations Manager | $110,000-$150,000 |
+| Sales Manager | $90,000-$130,000 + commission |
+| Office Manager / Controller | $70,000-$95,000 |
+
+Note: Benefits add ~15-20% on top of base salary.
