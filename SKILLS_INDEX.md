@@ -1,20 +1,15 @@
-# Skills Index
+# Finance Skills — Index
 
-Quick reference for Claude to determine which skill to load.
+Use this index when unsure which skill applies. Match the trigger to the task and fetch the corresponding SKILL.md.
 
-## financial-statement-analysis
-**Trigger**: User shares or references financial statements (income statement, balance sheet, cash flow), asks for margin analysis, quality of earnings review, revenue bridge, working capital analysis, or any historical financial performance review. Also trigger when the user says "analyze the financials", "review the P&L", "look at the books", or similar.
-**File**: `financial-statement-analysis/SKILL.md`
+| Trigger | Skill to Fetch |
+|---|---|
+| New deal / uploaded financials / "run the pipeline" / "normalize these" | `deal-pipeline/SKILL.md` |
+| Financial statement review / QoE / margins / working capital | `financial-statement-analysis/SKILL.md` |
+| Valuation / DCF / comps / acquisition model / returns / LOI / "what would we pay" | `valuation-ma-modeling/SKILL.md` |
+| Market research / investment thesis / sector analysis / macro / "what's the setup on X" | `macro-investment-research/SKILL.md` |
 
-## valuation-ma-modeling
-**Trigger**: User asks for a DCF, comparable company analysis, precedent transactions, acquisition model, purchase price allocation, or anything related to valuing a business or structuring a deal. Also trigger for Diligence OS work, LOI analysis, or any Canadian SMB acquisition context.
-**File**: `valuation-ma-modeling/SKILL.md`
-
-## deal-pipeline
-**Trigger**: Starting diligence on a new deal, uploading financial statements (PDF or Excel), normalizing financials, running the full pipeline from raw documents to model-ready Excel. Trigger on: "new deal", "run the pipeline", "process these financials", "normalize the statements", "start diligence", or any time financial documents are uploaded for a new investment opportunity. This skill orchestrates all other finance skills — load it first.
-**File**: `deal-pipeline/SKILL.md`
-**Sub-agents**: `deal-pipeline/agents/format-agent.md`, `deal-pipeline/agents/structure-detective.md`, `deal-pipeline/agents/normalization-agent.md`
-
-## macro-investment-research
-**Trigger**: User wants to research a sector, macro theme, or market trend; build or update an investment thesis; analyze a public or private company from an investor's perspective; or produce a research memo. Also trigger when the user references their investment tracking, Notion research pages, or asks "what's the thesis on X".
-**File**: `macro-investment-research/SKILL.md`
+All skills are tuned to:
+- Canadian SMB M&A context (SK/AB geography, industrial sectors)
+- Diligence OS module structure
+- Paul Wall's output preferences (numbers-forward, no filler, CAD context)
