@@ -1,90 +1,92 @@
----
-name: financial-statement-analysis
-description: Analyze income statements, balance sheets, and cash flow statements for operational and investment purposes. Use this skill whenever the user shares financials, asks about margins, profitability, working capital, quality of earnings, revenue bridges, or any historical financial performance. Trigger on phrases like "analyze the financials", "review the P&L", "look at the books", "walk me through the IS", "what does the balance sheet look like", or when financial data (even raw or messy) is pasted into the conversation. Also trigger for NetSuite exports, ROM system outputs, or Excel dumps from the scrap metal business.
----
+# Financial Statement Analysis Skill
 
-# Financial Statement Analysis
+## Purpose
+Deep analysis of normalized financial statements. QoE memo, margin analysis, working capital, KPIs, Diligence OS Module 2 output.
 
-Paul works in finance within the scrap metal recycling industry (Saskatchewan & Alberta). His stack is NetSuite + ROM (SQL-connected) + Excel + Power BI. He leads FP&A. Analyses may be for internal management reporting, M&A diligence (Diligence OS), or personal investment research.
+## Trigger
+Financial statement review, QoE analysis, margin analysis, working capital, KPI benchmarking, "how does this business look financially."
 
-## Step 1 — Understand the Context
-
-Before diving in, establish:
-- **Purpose**: Internal ops review / M&A diligence / investment research?
-- **Period**: Monthly, quarterly, annual? YTD?
-- **Source**: NetSuite export / ROM / uploaded file / pasted data?
-- **Comparators available?**: Prior period, budget, industry benchmarks?
-
-If the purpose isn't stated, default to a **management reporting lens** (ops-focused, variance-driven).
+## References
+- `financial-statement-analysis/references/kpi-library.md`
+- `financial-statement-analysis/references/diligence-os-structure.md`
 
 ---
 
-## Step 2 — Analytical Framework
+## Analysis Framework
 
-Work through the statements in this order: **IS → BS → CF**. Don't just describe — interpret and flag.
+### 1. Revenue Quality
+- Revenue CAGR (2-year, 3-year)
+- Revenue by segment/service line if available
+- Customer concentration — top 5 as % of revenue (request if not provided)
+- Seasonality — flag if YTD stub distorts comparisons
+- Contract vs. spot revenue mix
+- Flag: single customer >20% revenue = concentration risk
 
-### Income Statement
-- Revenue: growth rate, mix shift, volume vs. price drivers (critical in scrap — commodity price vs. tonnage)
-- Gross margin: absolute and %, trend, any structural changes
-- EBITDA bridge: from prior period or budget — volume, price, cost, mix
-- Below-the-line: D&A, interest, one-time items — normalize where needed
-- Net income quality: is it cash-generative or accounting-driven?
+### 2. Margin Analysis
+For each normalized period compute:
 
-### Balance Sheet
-- Working capital: AR days, AP days, inventory turns — flag anything unusual
-- Capex vs. D&A: is the business investing or harvesting?
-- Leverage: net debt, debt/EBITDA, covenant headroom if known
-- Any off-balance-sheet items or related-party items to flag
+| Metric | Formula |
+|---|---|
+| Gross Margin % | Gross Profit / Net Revenue |
+| EBITDA Margin % | EBITDA / Net Revenue |
+| EBIT Margin % | EBIT / Net Revenue |
+| Net Margin % | Net Income / Net Revenue |
 
-### Cash Flow Statement
-- Cash conversion: EBITDA → FCF walk
-- Investing: growth capex vs. maintenance
-- Financing: debt draws/repayments, dividends
-- Net cash position change and trend
+Compare to Canadian SMB benchmarks. Trend analysis: expanding or contracting — explain the driver.
 
----
+### 3. Adjusted EBITDA Build (waterfall)
+```
+Reported Net Income
++ Income Tax Provision
++ Interest Expense
++ Depreciation & Amortization
+= Reported EBITDA
 
-## Step 3 — Quality of Earnings Flags
+QoE Adjustments:
++ Owner compensation above market (normalize to $150-185K)
++ Personal vehicle / personal expenses
++ One-time bad debt
++ Non-recurring losses / write-offs
+- Non-recurring gains (asset disposals, insurance)
+- COVID subsidies / government grants
++/- Related-party rent (normalize to market)
+= Adjusted EBITDA
+```
 
-Always run a QoE lens, especially in M&A context. Flag:
-- [ ] Revenue recognition issues (timing, one-time contracts)
-- [ ] Normalized vs. reported EBITDA (add-backs: owner comp, related party, one-time)
-- [ ] Working capital normalization (seasonal peaks, stuffing)
-- [ ] Non-recurring items above/below EBITDA
-- [ ] Related-party transactions
-- [ ] Deferred revenue or expense manipulation
+Present as waterfall table by year. Show low/base/high adjustment scenarios where judgment applies.
 
----
-
-## Step 4 — Output Format
-
-Match the output to the stated purpose:
-
-| Purpose | Primary output | Format notes |
+### 4. Working Capital Analysis
+| Metric | Formula | Watch |
 |---|---|---|
-| Internal ops review | Excel summary + narrative | Dense, numbers-first, variance callouts |
-| M&A diligence | Word memo + Excel support | Follow Diligence OS structure (see references/diligence-os-structure.md) |
-| Investor research | Word or Notion page | Thesis-linked, comp-contextualized |
-| Management presentation | PPTX | 1 slide per statement + summary bridge slide |
+| Net Working Capital | Current Assets - Current Liabilities | Exclude shareholder receivables |
+| Current Ratio | Current Assets / Current Liabilities | >1.2x healthy |
+| DSO | AR / (Revenue / 365) | Trending up = collections issue |
+| DPO | AP / (COGS / 365) | |
+| Inventory Days | Inventory / (COGS / 365) | |
+| NWC % Revenue | NWC / Revenue | Use for peg calculation |
 
-### Excel output standards
-- Use a clean summary tab: IS / BS / CF side by side with % columns and YoY variances
-- Color code: green = favorable, red = unfavorable, grey = neutral/calculated
-- Include a KPI dashboard tab with the 8–10 most relevant metrics for the business
-- Flag outliers with comments, not just colors
+### 5. Leverage & Debt
+| Metric | Formula |
+|---|---|
+| Total Debt | Current LTD + Long-Term Debt |
+| Net Debt | Total Debt - Cash |
+| Debt / Adj. EBITDA | Net Debt / Adj. EBITDA |
+| Interest Coverage | Adj. EBITDA / Interest |
+| Fixed Charge Coverage | (Adj. EBITDA - Capex) / (Interest + Principal) |
 
-### Word output standards
-- Lead with a 1-paragraph executive summary (what matters most)
-- Findings in order: Revenue → Margins → Working Capital → Cash → Red Flags
-- Use tables for numbers, prose for interpretation
-- End with "Key Questions / Open Items" section
+### 6. Capex & Asset Intensity
+- Maintenance capex estimate: use D&A as proxy if actuals not available
+- Capex / Revenue %
+- Net PPE / Revenue
+- Equipment age / condition — request appraisal if PPE > 20% of deal value
+
+### 7. Red Flag Summary
+| # | Flag | Period | Amount | Severity | Recommended Action |
+|---|---|---|---|---|---|
 
 ---
 
-## Reference Files
+## Output
+QoE memo as Word (.docx). Save to: `deals/[DealCode]/02_diligence/QoE_Memo_[Date].docx`
 
-- `references/kpi-library.md` — Standard KPIs for scrap metal / recycling businesses
-- `references/diligence-os-structure.md` — Diligence OS module structure for M&A context
-- `references/netsuite-field-map.md` — Common NetSuite export field names and their meaning
-
-Load a reference file only if the task requires it.
+Structure: 1. Executive Summary (adj. EBITDA range, 3 key findings) 2. Revenue Quality 3. Margin Analysis 4. Adj. EBITDA Build 5. Working Capital 6. Leverage 7. Capex & Asset Intensity 8. Red Flag Register 9. Open Items
